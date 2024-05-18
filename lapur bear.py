@@ -18,6 +18,14 @@ class Animation(arcade.Sprite):
             else:
                 self.frame_index += 1
             self.set_texture(self.frame_index)
+class Pipe(arcade.Sprite):
+    def __init__(self):
+        super().__init__("pipe.png",0.2)
+        #self.center_x = SCREEN_WIDTH
+
+    def update(self):
+        self.center_x -=self.change_x
+
 
 class Bird(Animation):
     def __init__(self,filename,scale):
@@ -39,11 +47,20 @@ class Game(arcade.Window):
             self.bird.append_texture(arcade.load_texture(f"bird — копия/bird{i}.png"))
         self.game = True
         self.isJump=False
+        self.pipelist=arcade.SpriteList()
+
+    def setup(self):
+        for i in range(6):
+            pipe_bottom=Pipe()
+            pipe_bottom.center_y=0
+            pipe_bottom.center_x=150*i
+            self.pipelist.append(pipe_bottom)
 
     def on_draw(self):
         self.clear()
         arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, self.bg)
         self.bird.draw()
+        self.pipelist.draw()
 
 
     def update(self, delta_time):
@@ -65,4 +82,5 @@ class Game(arcade.Window):
 
 
 window=Game(SCREEN_WIDTH,SCREEN_HEIGHT,SCREEN_TITLE)
+window.setup()
 arcade.run()
